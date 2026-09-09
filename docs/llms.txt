@@ -1,0 +1,38 @@
+# {{PRODUCT}}
+
+> Log hours and invoice clients from your AI chat.
+
+{{PRODUCT}} is an MCP server for time tracking and invoicing. Connect it to Claude, ChatGPT, or any MCP-compatible assistant and describe your work in plain language: it logs time entries against your clients and projects, reconstructs forgotten days from calendar and commit activity, reports hours and unbilled amounts, and drafts and sends invoices with a Stripe payment link — never sending anything to a client without your explicit approval in the conversation.
+
+## MCP server
+
+- URL: {{MCP_URL}}
+- Transport: Streamable HTTP
+- Auth: OAuth 2.1 with dynamic client registration and PKCE
+- Discovery: {{BASE_URL}}/.well-known/oauth-authorization-server
+
+## Tools
+
+- `time.list_entries` — list individual time entries for a day, week, project, or client
+- `time.report` — hours and billing totals, grouped by day, project, or client
+- `workspace.list_projects` — list clients, projects, aliases, and rates
+- `time.propose_entries` — propose time entries from calendar, commit, or ticket activity
+- `time.log_entry` — log one time entry
+- `time.log_entries_batch` — log several time entries at once
+- `time.update_entry` — edit an existing time entry
+- `time.delete_entry` — delete a time entry
+- `workspace.create_client` — create a client
+- `workspace.create_project` — create a project
+- `invoice.list` — list invoices by status, client, or date range
+- `invoice.get` — get one invoice's details
+- `invoice.preview_draft` — preview what an invoice would contain, without creating it
+- `invoice.create_draft` — create a draft invoice from unbilled hours
+- `invoice.record_payment` — record a payment made outside Stripe
+- `invoice.send` — email a reviewed draft invoice to the client with a payment link
+- `invoice.void` — cancel an invoice and release its time entries
+
+## Docs
+
+- [Documentation]({{BASE_URL}}/docs)
+- [Privacy policy]({{BASE_URL}}/privacy)
+- [Terms of service]({{BASE_URL}}/terms)

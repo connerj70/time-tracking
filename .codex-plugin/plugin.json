@@ -1,0 +1,37 @@
+{
+  "name": "tally",
+  "version": "0.1.0",
+  "description": "Time tracking and invoicing for freelancers and small teams, from your chat.",
+  "author": { "name": "Tally", "email": "support@yourdomain.com" },
+  "homepage": "https://yourdomain.com",
+  "license": "MIT",
+  "keywords": ["time tracking", "invoicing", "freelance", "billing", "hours", "timesheet"],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "interface": {
+    "displayName": "Tally",
+    "shortDescription": "Log hours and invoice clients from your AI chat",
+    "longDescription": "Tell it what you worked on and it logs the hours to the right client. Ask what's unbilled and it drafts the invoice.\n\nForgot to track a day or a whole week? Tally reconstructs it from your calendar events, git commits, and tickets, matches each item to a project, and asks before logging anything uncertain.\n\nAsk how your week or month went and get hours by day, by project, or by client, billable vs. non-billable, and what's still unbilled. When it's time to get paid, Tally drafts the invoice, shows you the lines and total before anything is created, and only sends it (with a Stripe payment link) once you say so. It can also close out a whole month across every client that owes hours, one invoice at a time, always with your approval before sending.\n\nAlready tracking time elsewhere? Import history from Toggl, Harvest, or Clockify to bring your record with you.\n\nNothing needed before connecting — a free account is created on connect.",
+    "developerName": "Tally",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://yourdomain.com",
+    "privacyPolicyURL": "https://yourdomain.com/privacy",
+    "termsOfServiceURL": "https://yourdomain.com/terms",
+    "defaultPrompt": [
+      "Log 2 hours on the Acme redesign",
+      "How many billable hours this month?",
+      "What haven't I invoiced yet?",
+      "Reconstruct my Tuesday from my calendar",
+      "Invoice Acme for last month"
+    ],
+    "brandColor": "#1c1917",
+    "composerIcon": "assets/icon.png",
+    "logo": "assets/logo.png",
+    "screenshots": [
+      "assets/screenshot-week-grid.png",
+      "assets/screenshot-invoice.png",
+      "assets/screenshot-catch-up.png"
+    ]
+  }
+}

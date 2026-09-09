@@ -1,0 +1,15 @@
+{
+  "$schema": "https://chatgpt.com/schemas/apps-sdk/app-manifest.json",
+  "_note": "The 'id' below is issued by ChatGPT when you register this MCP server at chatgpt.com/plugins in Developer mode. Register the server first, copy the plugin_asdk_app_... id it assigns, and replace the placeholder here before publishing.",
+  "apps": [
+    {
+      "id": "plugin_asdk_app_REPLACE_ME",
+      "name": "Tally",
+      "mcp": {
+        "url": "https://mcp.yourdomain.com/mcp",
+        "transport": "streamable-http",
+        "auth": "oauth"
+      }
+    }
+  ]
+}

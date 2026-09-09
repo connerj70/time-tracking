@@ -1,0 +1,77 @@
+{
+  "instructions": "Run every prompt below in both Claude (as a custom connector) and ChatGPT (Developer mode) before every metadata change (tool descriptions, skill descriptions, plugin interface copy). Log which tool was chosen and with what arguments for each run. Aim for zero false fires on the negative prompts before chasing recall on the direct/indirect ones. Change one description at a time between passes so regressions are attributable.",
+  "prompts": [
+    {
+      "type": "direct",
+      "prompt": "Log 2 hours to Acme in Tally",
+      "expected": "time.log_entry",
+      "notes": "Explicit duration and client; should log directly without asking for clarification unless 'Acme' is ambiguous across multiple projects."
+    },
+    {
+      "type": "indirect",
+      "prompt": "I spent the morning on the Acme landing page, about 3 hours",
+      "expected": "time.log_entry",
+      "notes": "Duration given as 'about 3 hours' — the user supplied it, so this is not an invented duration; log it. Single entry, so time.log_entry rather than the batch tool."
+    },
+    {
+      "type": "indirect",
+      "prompt": "How many billable hours did I do in August?",
+      "expected": "time.report",
+      "notes": "Aggregate question, not individual entries. group_by likely omitted or 'none'; start_date/end_date should span August."
+    },
+    {
+      "type": "indirect",
+      "prompt": "What haven't I invoiced yet?",
+      "expected": "time.report",
+      "notes": "Primary expectation is time.report (unbilled_amount / unbilled_only view across clients). Acceptable alternative: invoice.preview_draft if the model infers a specific client from context. Flag as a miss only if neither tool is called."
+    },
+    {
+      "type": "indirect",
+      "prompt": "Invoice Acme for last month",
+      "expected": "invoice.preview_draft",
+      "notes": "Should route through the invoice-client skill, which starts with invoice.preview_draft before ever calling invoice.create_draft or invoice.send."
+    },
+    {
+      "type": "indirect",
+      "prompt": "I forgot to log anything this week, can you figure it out from my calendar?",
+      "expected": "time.propose_entries",
+      "notes": "Should route through the catch-up skill: gather calendar activity first, then call time.propose_entries. Do not expect time.log_entries_batch on the same turn — that only follows user confirmation."
+    },
+    {
+      "type": "indirect",
+      "prompt": "Which clients owe me money?",
+      "expected": "invoice.list",
+      "notes": "Expect status filter 'outstanding' or 'overdue', not 'all'."
+    },
+    {
+      "type": "negative",
+      "prompt": "Set a timer for 25 minutes",
+      "expected": null,
+      "notes": "Not a time-tracking request; no Tally tool should fire."
+    },
+    {
+      "type": "negative",
+      "prompt": "Remind me to invoice Acme on Friday",
+      "expected": null,
+      "notes": "A reminder/scheduling request, not an invoicing action now. invoice.preview_draft or invoice.create_draft firing here is a false positive."
+    },
+    {
+      "type": "negative",
+      "prompt": "Add a meeting with Acme tomorrow at 3",
+      "expected": null,
+      "notes": "Calendar scheduling, not time logging. time.log_entry firing here is a false positive."
+    },
+    {
+      "type": "negative",
+      "prompt": "How long is the flight to Denver?",
+      "expected": null,
+      "notes": "Unrelated duration question; no Tally tool applies."
+    },
+    {
+      "type": "negative",
+      "prompt": "Log this bug in Linear",
+      "expected": null,
+      "notes": "Names a different product/tool explicitly ('Linear'); time.log_entry firing here is a false positive from surface-level 'log' keyword matching."
+    }
+  ]
+}

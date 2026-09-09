@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: tally
+      POSTGRES_PASSWORD: tally
+      POSTGRES_DB: tally
+    ports:
+      - "5433:5432"
+    volumes:
+      - tally-pg:/var/lib/postgresql/data
+volumes:
+  tally-pg:

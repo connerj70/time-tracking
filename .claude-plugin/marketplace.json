@@ -1,0 +1,13 @@
+{
+  "name": "tally-marketplace",
+  "owner": { "name": "Tally" },
+  "plugins": [
+    {
+      "name": "tally",
+      "source": "./",
+      "description": "Time tracking and invoicing for freelancers and small teams, from your chat.",
+      "version": "0.1.0",
+      "category": "productivity"
+    }
+  ]
+}

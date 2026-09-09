@@ -1,0 +1,16 @@
+{
+  "name": "tally",
+  "version": "0.1.0",
+  "description": "Time tracking and invoicing for freelancers and small teams, from your chat.",
+  "author": { "name": "Tally", "email": "support@yourdomain.com" },
+  "homepage": "https://yourdomain.com",
+  "license": "MIT",
+  "keywords": ["time tracking", "invoicing", "freelance", "billing", "hours", "timesheet"],
+  "skills": "./skills/",
+  "mcpServers": {
+    "tally": {
+      "type": "http",
+      "url": "https://mcp.yourdomain.com/mcp"
+    }
+  }
+}
