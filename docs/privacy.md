@@ -38,7 +38,7 @@ Access tokens expire after **1 hour**. Refresh tokens last 30 days and rotate ev
 We use a small number of service providers to run {{PRODUCT}}:
 
 - **Stripe** — payment processing for your subscription and for the payment links on invoices you send to your clients.
-- **Resend** — delivers magic-link sign-in emails and invoice emails.
+- **Our email provider** (an SMTP service such as Brevo, or Resend) — delivers magic-link sign-in emails and invoice emails.
 - **Google** — optional sign-in via Google OAuth, if you choose it instead of a magic link.
 - **Our hosting and database provider** — runs the application and stores the data described above.
 
@@ -46,7 +46,7 @@ We don't sell your data or share it with anyone else for advertising.
 
 ## Retention and deletion
 
-We keep your data for as long as your account is active. To delete your account and workspace, email {{SUPPORT_EMAIL}}. Deleting your workspace removes your time entries, clients, projects, invoices, and audit log; it does not retroactively delete records Stripe or Resend already hold in their own systems as required by their own retention rules (e.g. completed payment records).
+We keep your data for as long as your account is active. To delete your account and workspace, email {{SUPPORT_EMAIL}}. Deleting your workspace removes your time entries, clients, projects, invoices, and audit log; it does not retroactively delete records Stripe or the email provider already hold in their own systems as required by their own retention rules (e.g. completed payment records).
 
 ## Security
 

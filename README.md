@@ -17,7 +17,7 @@ Claude / ChatGPT / MCP client
 └───────────────────────────────────────────────┘
         │                    │                │
         ▼                    ▼                ▼
-    Postgres              Stripe           Resend
+    Postgres              Stripe        SMTP / Resend
  (workspaces, entries,  (subscriptions,  (magic links,
   invoices, tokens,      payment links)   invoice emails)
   audit log)
@@ -43,7 +43,7 @@ Then connect with the MCP Inspector:
 npm run inspector
 ```
 
-Choose **Streamable HTTP**, point it at `http://localhost:3000/mcp`, and connect. The inspector will hit the OAuth flow and open the login page in your browser. Without `RESEND_API_KEY` set, magic-link sign-in doesn't send an email — the link is printed to the server log and also shown directly on the "check your email" page, so local dev never needs a real mailbox.
+Choose **Streamable HTTP**, point it at `http://localhost:3000/mcp`, and connect. The inspector will hit the OAuth flow and open the login page in your browser. Without `SMTP_URL` or `RESEND_API_KEY` set, magic-link sign-in doesn't send an email — the link is printed to the server log and also shown directly on the "check your email" page, so local dev never needs a real mailbox.
 
 ## Project layout
 
@@ -59,7 +59,7 @@ src/
   http/          express app, docs/marketing routes, web app routes, invoice pages
   import/        CSV import (Toggl/Harvest/Clockify)
   stripe/        billing checkout, Connect onboarding, webhook handling
-  email/         Resend integration (magic links, invoice emails)
+  email/         email sending via SMTP (nodemailer) or Resend (magic links, invoice emails)
   pdf/           invoice PDF rendering (pdfkit)
 app/             MCP App UI source; scripts/build-app.ts bundles it into app/dist/app.html,
                  which src/mcp/app-resource.ts embeds as an MCP UI resource and
@@ -86,7 +86,8 @@ test/            unit tests (vitest) and the golden prompt set
 | `DATABASE_URL` | no (default local docker-compose Postgres) | Postgres connection string |
 | `SESSION_SECRET` | yes in production | Signs session cookies and magic links; `openssl rand -hex 32` |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | no | Enables "Continue with Google"; omit to offer only magic links |
-| `RESEND_API_KEY` | no | Sends magic-link and invoice emails; omit in dev to print links to the log instead |
+| `SMTP_URL` | no | Any SMTP provider, e.g. `smtps://LOGIN:KEY@smtp-relay.brevo.com:465`; takes precedence over Resend |
+| `RESEND_API_KEY` | no | Alternative to SMTP_URL. With neither set, emails are printed to the log (dev only) |
 | `EMAIL_FROM` | no | From address for outbound email |
 | `STRIPE_SECRET_KEY` | no | Enables billing checkout and invoice payment links |
 | `STRIPE_WEBHOOK_SECRET` | no (required if `STRIPE_SECRET_KEY` is set) | Verifies `/webhooks/stripe` payloads |

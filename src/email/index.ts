@@ -1,3 +1,4 @@
+import nodemailer, { type Transporter } from 'nodemailer';
 import { config } from '../config.js';
 import type { WorkspaceRow } from '../services/context.js';
 import type { SerializedInvoice } from '../services/invoices.js';
@@ -12,9 +13,18 @@ interface Mail {
 
 const escape = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
+let smtp: Transporter | null = null;
+
 export async function sendMail(mail: Mail): Promise<void> {
+  if (config.email.smtpUrl) {
+    // Any SMTP provider: Brevo, Amazon SES, Postmark, Mailgun, Gmail app password…
+    // e.g. smtps://user:pass@smtp-relay.brevo.com:465 or smtp://user:pass@email-smtp.us-east-1.amazonaws.com:587
+    smtp ??= nodemailer.createTransport(config.email.smtpUrl);
+    await smtp.sendMail({ from: config.email.from, to: mail.to, subject: mail.subject, text: mail.text, html: mail.html });
+    return;
+  }
   if (!config.email.resendApiKey) {
-    if (config.isProd) throw new Error('RESEND_API_KEY is not set; cannot send email');
+    if (config.isProd) throw new Error('No email provider configured: set SMTP_URL or RESEND_API_KEY');
     console.log(`\n=== DEV EMAIL (not sent) ===\nTo: ${mail.to}\nSubject: ${mail.subject}\n\n${mail.text}\n============================\n`);
     return;
   }

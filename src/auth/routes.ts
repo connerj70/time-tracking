@@ -76,7 +76,7 @@ authRoutes.post('/oauth/magic/start', async (req, res) => {
   await query(`INSERT INTO magic_links (token_hash, email, next_path, expires_at) VALUES ($1,$2,$3, now() + interval '15 minutes')`, [sha256(token), email, next]);
   const url = `${config.authIssuerUrl}/oauth/magic/verify?token=${token}`;
   await sendMagicLink(email, url);
-  res.send(loginPage({ next, sent: email, devLink: !config.email.resendApiKey && !config.isProd ? url : undefined }));
+  res.send(loginPage({ next, sent: email, devLink: !config.email.enabled && !config.isProd ? url : undefined }));
 });
 
 authRoutes.get('/oauth/magic/verify', async (req, res) => {

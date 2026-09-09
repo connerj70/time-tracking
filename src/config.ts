@@ -34,8 +34,13 @@ export const config = {
     },
   },
   email: {
+    /** Either works; SMTP_URL wins when both are set. */
+    smtpUrl: process.env.SMTP_URL ?? '',
     resendApiKey: process.env.RESEND_API_KEY ?? '',
     from: env('EMAIL_FROM', 'Tallied <invoices@localhost>'),
+    get enabled() {
+      return Boolean(this.smtpUrl || this.resendApiKey);
+    },
   },
   stripe: {
     secretKey: process.env.STRIPE_SECRET_KEY ?? '',
