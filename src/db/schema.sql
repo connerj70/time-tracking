@@ -1,14 +1,15 @@
--- Tally schema. Applied idempotently by src/db/migrate.ts.
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
+-- Tallied schema. Applied idempotently by src/db/migrate.ts into the schema named by DATABASE_SCHEMA.
+-- No extensions required: gen_random_uuid() is built into Postgres 13+, emails are stored lowercase.
 
 CREATE TABLE IF NOT EXISTS users (
   id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  email         citext UNIQUE NOT NULL,
+  email         text NOT NULL,
   name          text,
   avatar_url    text,
   auth_provider text NOT NULL DEFAULT 'magic_link',   -- google | magic_link
   created_at    timestamptz NOT NULL DEFAULT now()
 );
+CREATE UNIQUE INDEX IF NOT EXISTS users_email_lower_idx ON users (lower(email));
 
 CREATE TABLE IF NOT EXISTS workspaces (
   id                        uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -202,7 +203,7 @@ CREATE INDEX IF NOT EXISTS oauth_tokens_family_idx ON oauth_tokens(family_id);
 
 CREATE TABLE IF NOT EXISTS magic_links (
   token_hash text PRIMARY KEY,
-  email      citext NOT NULL,
+  email      text NOT NULL,
   next_path  text,
   expires_at timestamptz NOT NULL,
   used_at    timestamptz

@@ -17,7 +17,7 @@ export interface OnboardingCard {
 
 /** Find or create the user; returns whether onboarding (workspace creation) is still needed. */
 export async function upsertUser(id: Identity): Promise<{ userId: string; workspaceId: string | null; isNew: boolean }> {
-  const existing = await one<{ id: string }>(`SELECT id FROM users WHERE email = $1`, [id.email]);
+  const existing = await one<{ id: string }>(`SELECT id FROM users WHERE lower(email) = lower($1)`, [id.email]);
   let userId: string;
   let isNew = false;
   if (existing) {

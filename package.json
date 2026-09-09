@@ -1,5 +1,5 @@
 {
-  "name": "tally-mcp",
+  "name": "tallied",
   "version": "0.1.0",
   "private": true,
   "description": "Time tracking + invoicing, connector-first. MCP server for Claude and ChatGPT.",

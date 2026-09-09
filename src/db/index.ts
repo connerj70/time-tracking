@@ -10,7 +10,20 @@ types.setTypeParser(1700, (v: string) => Number(v));
 // BIGINT as number (cents are far below 2^53).
 types.setTypeParser(20, (v: string) => Number(v));
 
-export const pool = new Pool({ connectionString: config.databaseUrl, max: 10 });
+const schemaIdent = (() => {
+  if (!/^[a-z_][a-z0-9_]*$/.test(config.databaseSchema)) throw new Error(`DATABASE_SCHEMA "${config.databaseSchema}" must be a simple lowercase identifier`);
+  return config.databaseSchema;
+})();
+
+export const pool = new Pool({
+  connectionString: config.databaseUrl,
+  max: 10,
+  // Every connection sees our schema first; public stays reachable for built-ins.
+  options: `-c search_path=${schemaIdent},public`,
+  ssl: /sslmode=require|render\.com|neon\.tech|supabase\.co/.test(config.databaseUrl) && !/localhost|127\.0\.0\.1/.test(config.databaseUrl) ? { rejectUnauthorized: false } : undefined,
+});
+
+export const schemaName = schemaIdent;
 
 export type Queryable = Pick<pg.Pool, 'query'> | pg.PoolClient;
 

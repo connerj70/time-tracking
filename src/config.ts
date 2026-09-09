@@ -23,6 +23,8 @@ export const config = {
   /** Minimal web app: settings, import, billing. */
   appUrl: env('APP_URL', `${baseUrl}/app`),
   databaseUrl: env('DATABASE_URL', 'postgres://tally:tally@localhost:5433/tally'),
+  /** Postgres schema for all tables, so the app can share a database with other apps. */
+  databaseSchema: env('DATABASE_SCHEMA', 'tallied'),
   sessionSecret: env('SESSION_SECRET', 'dev-secret-do-not-use-in-production'),
   google: {
     clientId: process.env.GOOGLE_CLIENT_ID ?? '',
@@ -33,7 +35,7 @@ export const config = {
   },
   email: {
     resendApiKey: process.env.RESEND_API_KEY ?? '',
-    from: env('EMAIL_FROM', 'Tally <invoices@localhost>'),
+    from: env('EMAIL_FROM', 'Tallied <invoices@localhost>'),
   },
   stripe: {
     secretKey: process.env.STRIPE_SECRET_KEY ?? '',
@@ -45,7 +47,7 @@ export const config = {
       return Boolean(this.secretKey);
     },
   },
-  productName: env('PRODUCT_NAME', 'Tally'),
+  productName: env('PRODUCT_NAME', 'Tallied'),
   supportEmail: env('SUPPORT_EMAIL', 'support@localhost'),
   /** Access tokens: 1 hour. Refresh tokens: 30 days, rotated on every use. */
   accessTokenTtlSec: 60 * 60,

@@ -1,4 +1,4 @@
-# Directory listing copy — Tally
+# Directory listing copy — Tallied
 
 Copy for the Claude Connectors Directory and the ChatGPT plugin directory.
 Same product, same copy where the two directories allow it; platform-specific
@@ -6,7 +6,7 @@ fields are called out.
 
 ## Name
 
-Tally
+Tallied
 
 ## Tagline
 
@@ -23,18 +23,18 @@ Character count: 37 (limit 55).
 
 (2000 character limit; this copy is 1143 characters.)
 
-Tally is time tracking and invoicing for freelancers and small teams, built to
+Tallied is time tracking and invoicing for freelancers and small teams, built to
 be used entirely from chat. Tell it what you worked on — "spent the morning on
 the Acme landing page" — and it logs the hours to the right project and
 client, asking before it guesses a duration or creates something new.
 
-Forgot to track a day or a week? Tally reconstructs it from your calendar,
+Forgot to track a day or a week? Tallied reconstructs it from your calendar,
 git commits, and tickets, proposes entries with a confidence score per item,
 and flags anything unmatched or already logged before you confirm.
 
 Ask how your week or month went and get hours by day, project, or client,
 billable vs. non-billable, and what's still unbilled. When it's time to get
-paid, Tally previews the invoice — lines, hours, total — before creating a
+paid, Tallied previews the invoice — lines, hours, total — before creating a
 draft, and only emails it (with a Stripe payment link) once you explicitly say
 to send it. It can also close out an entire month across every client with
 unbilled hours, drafting one invoice at a time and sending only what you
@@ -54,10 +54,10 @@ Nothing needed before connecting — a free account is created on connect.
 - Preview, create, and send client invoices.
 - Close out a month across all clients with unbilled work.
 
-**Prerequisites:** none. A free Tally account is created automatically on
+**Prerequisites:** none. A free Tallied account is created automatically on
 first connect.
 
-**Read/write:** both. Tally reads time entries, projects, clients, and
+**Read/write:** both. Tallied reads time entries, projects, clients, and
 invoices, and writes new time entries, projects, clients, and invoices. It
 sends real email (via `invoice.send`) only when the user explicitly asks it
 to send an invoice.

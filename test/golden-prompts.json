@@ -3,7 +3,7 @@
   "prompts": [
     {
       "type": "direct",
-      "prompt": "Log 2 hours to Acme in Tally",
+      "prompt": "Log 2 hours to Acme in Tallied",
       "expected": "time.log_entry",
       "notes": "Explicit duration and client; should log directly without asking for clarification unless 'Acme' is ambiguous across multiple projects."
     },
@@ -47,7 +47,7 @@
       "type": "negative",
       "prompt": "Set a timer for 25 minutes",
       "expected": null,
-      "notes": "Not a time-tracking request; no Tally tool should fire."
+      "notes": "Not a time-tracking request; no Tallied tool should fire."
     },
     {
       "type": "negative",
@@ -65,7 +65,7 @@
       "type": "negative",
       "prompt": "How long is the flight to Denver?",
       "expected": null,
-      "notes": "Unrelated duration question; no Tally tool applies."
+      "notes": "Unrelated duration question; no Tallied tool applies."
     },
     {
       "type": "negative",

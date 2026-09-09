@@ -1,6 +1,6 @@
-# Tally
+# Tallied
 
-Tally is a time-tracking and invoicing MCP server. It's connector-first: Claude and ChatGPT (or any MCP client) are the primary UI — you tell an assistant what you worked on and it logs the hours, ask what's unbilled and it drafts the invoice. A minimal web app handles the things chat is bad at: account settings, CSV import, and billing. Clients pay invoices through a Stripe payment link on a public, tokenized page.
+Tallied is a time-tracking and invoicing MCP server. It's connector-first: Claude and ChatGPT (or any MCP client) are the primary UI — you tell an assistant what you worked on and it logs the hours, ask what's unbilled and it drafts the invoice. A minimal web app handles the things chat is bad at: account settings, CSV import, and billing. Clients pay invoices through a Stripe payment link on a public, tokenized page.
 
 ```
 Claude / ChatGPT / MCP client
@@ -91,7 +91,7 @@ test/            unit tests (vitest) and the golden prompt set
 | `STRIPE_WEBHOOK_SECRET` | no (required if `STRIPE_SECRET_KEY` is set) | Verifies `/webhooks/stripe` payloads |
 | `STRIPE_PRICE_PRO` / `STRIPE_PRICE_TEAM` | no | Price IDs for the paid plans |
 | `STRIPE_CONNECT_FEE_BPS` | no (default `0`) | Optional platform fee, in basis points, on Connect payment links |
-| `PRODUCT_NAME` | no (default `Tally`) | Used in emails, docs pages, and MCP server metadata |
+| `PRODUCT_NAME` | no (default `Tallied`) | Used in emails, docs pages, and MCP server metadata |
 | `SUPPORT_EMAIL` | no (default `support@localhost`) | Shown in docs and consent screens |
 
 See `.env.example` for the same list with inline comments.
@@ -106,7 +106,7 @@ See `.env.example` for the same list with inline comments.
 
 ## Deployment
 
-Tally runs on any host that gives you a stable HTTPS origin — Fly.io, Railway, Render, or similar.
+Tallied runs on any host that gives you a stable HTTPS origin — Fly.io, Railway, Render, or similar.
 
 1. Set `BASE_URL` to your public origin. Set `MCP_URL`, `AUTH_ISSUER_URL`, and/or `APP_URL` only if you're splitting those surfaces across subdomains.
 2. `npm run build` (runs `build:app` then `tsc`), then `npm start`.

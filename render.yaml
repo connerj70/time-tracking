@@ -1,0 +1,40 @@
+# Render Blueprint. Uses the existing Postgres instance (set DATABASE_URL to its *internal* connection string).
+services:
+  - type: web
+    name: tallied
+    runtime: docker
+    plan: starter
+    region: oregon            # match your Postgres region so the internal URL works
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BASE_URL
+        value: https://withtallied.com
+      - key: PRODUCT_NAME
+        value: Tallied
+      - key: SUPPORT_EMAIL
+        value: support@withtallied.com
+      - key: EMAIL_FROM
+        value: Tallied <invoices@withtallied.com>
+      - key: DATABASE_SCHEMA
+        value: tallied
+      - key: DATABASE_URL
+        sync: false          # paste the internal connection string of your existing Render Postgres
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PRICE_PRO
+        sync: false
+      - key: STRIPE_PRICE_TEAM
+        sync: false

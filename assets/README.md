@@ -7,7 +7,7 @@ repo — they need to be produced and dropped in here with these exact filenames
 
 - `icon.png` — 512x512 PNG, square, transparent or solid background. Used as the
   composer icon in ChatGPT. Should read clearly at small sizes (down to ~32px).
-- `logo.png` — Tally logo, PNG, used in the directory listing card. Same square
+- `logo.png` — Tallied logo, PNG, used in the directory listing card. Same square
   512x512 treatment as the icon unless the brand logo is wordmark-shaped, in
   which case use a comfortable aspect ratio (e.g. 3:1) at at least 1000px wide.
 - `screenshot-week-grid.png` — screenshot of the `time.report` week-grid app
