@@ -3,13 +3,13 @@
  * 2 invoices (one paid, one sent). Idempotent per email. Usage: npm run db:seed [-- email@example.com]
  */
 import { DateTime } from 'luxon';
-import { pool, one, query } from '../src/db/index.js';
-import { migrate } from '../src/db/migrate.js';
-import { loadContext } from '../src/services/context.js';
-import { createClient, createProject } from '../src/services/workspace.js';
-import { logEntry } from '../src/services/time.js';
-import { createDraft } from '../src/services/invoices.js';
-import { createWorkspaceForUser, upsertUser } from '../src/auth/users.js';
+import { pool, one, query } from '../db/index.js';
+import { migrate } from '../db/migrate.js';
+import { loadContext } from '../services/context.js';
+import { createClient, createProject } from '../services/workspace.js';
+import { logEntry } from '../services/time.js';
+import { createDraft } from '../services/invoices.js';
+import { createWorkspaceForUser, upsertUser } from '../auth/users.js';
 
 const email = process.argv[2] ?? 'reviewer@example.com';
 const TZ = 'America/New_York';
@@ -18,7 +18,11 @@ async function main() {
   await migrate();
   const existing = await one<{ id: string }>(`SELECT id FROM users WHERE email = $1`, [email]);
   if (existing) {
-    console.log(`User ${email} already exists; delete it first to re-seed:\n  DELETE FROM users WHERE email = '${email}';`);
+    console.log(
+      `User ${email} already exists; delete their workspace and user first to re-seed:\n` +
+        `  DELETE FROM workspaces WHERE id IN (SELECT workspace_id FROM memberships m JOIN users u ON u.id = m.user_id WHERE u.email = '${email}');\n` +
+        `  DELETE FROM users WHERE email = '${email}';`,
+    );
     return;
   }
   const u = await upsertUser({ email, name: 'Riley Reviewer', provider: 'magic_link' });

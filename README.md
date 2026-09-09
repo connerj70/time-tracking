@@ -32,6 +32,7 @@ npm install
 npm run db:up          # postgres via docker compose, localhost:5433
 npm run db:migrate     # applies src/db/schema.sql idempotently
 npm run db:seed        # seeds a demo workspace; prints the login email
+# In production (compiled image, no tsx): node dist/scripts/seed.js reviewer@withtallied.com
 npm run build:app      # builds the MCP App UI bundle into app/dist/app.html
 npm run dev            # tsx watch src/index.ts
 ```

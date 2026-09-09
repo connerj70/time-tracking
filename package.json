@@ -14,7 +14,7 @@
     "build:app": "tsx scripts/build-app.ts",
     "db:up": "docker compose up -d db",
     "db:migrate": "tsx src/db/migrate.ts",
-    "db:seed": "tsx scripts/seed.ts",
+    "db:seed": "tsx src/scripts/seed.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.json --noEmit",

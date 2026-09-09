@@ -39,7 +39,7 @@ export async function migrate(): Promise<void> {
   }
 }
 
-if (process.argv[1] && process.argv[1].endsWith('migrate.ts')) {
+if (process.argv[1] && /migrate\.[tj]s$/.test(process.argv[1])) {
   migrate()
     .then(() => {
       console.log('migrated');
