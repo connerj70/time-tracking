@@ -1,5 +1,3 @@
-<!-- Template terms of service. Placeholder legal document — have it reviewed by counsel, and fill in the governing-law jurisdiction, before relying on it in production. -->
-
 # Terms of Service
 
 **Effective September 2026**

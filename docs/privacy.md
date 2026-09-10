@@ -1,5 +1,3 @@
-<!-- Template privacy policy. Placeholder legal document — have it reviewed by counsel before relying on it in production. Replace {{PRODUCT}}, {{BASE_URL}}, and {{SUPPORT_EMAIL}} are substituted automatically when this page is served; everything else is yours to edit. -->
-
 # Privacy Policy
 
 **Effective September 2026**
