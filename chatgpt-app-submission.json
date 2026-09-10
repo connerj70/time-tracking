@@ -1,0 +1,216 @@
+{
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "Tallied",
+    "subtitle": "Track time and invoices",
+    "description": "Tallied helps freelancers and small teams log work, review hours and unbilled totals, reconstruct missed time from supplied activity, and create, send, and track client invoices.",
+    "category": "PRODUCTIVITY"
+  },
+  "tools": {
+    "time.list_entries": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Retrieves time entries from the connected workspace without changing them.",
+        "open_world_justification": "Only reads private workspace data and does not contact external systems.",
+        "destructive_justification": "Does not delete, overwrite, or otherwise change time entries."
+      }
+    },
+    "time.report": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Calculates summaries from existing workspace time entries without persisting changes.",
+        "open_world_justification": "Only reads private workspace data and does not contact external systems.",
+        "destructive_justification": "Does not delete, overwrite, or otherwise change workspace data."
+      }
+    },
+    "workspace.list_projects": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Retrieves clients, projects, aliases, and rates from the connected workspace.",
+        "open_world_justification": "Only reads private workspace data and does not contact external systems.",
+        "destructive_justification": "Does not delete, overwrite, or otherwise change workspace data."
+      }
+    },
+    "invoice.list": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Retrieves invoice summaries and calculated outstanding totals without changing invoices.",
+        "open_world_justification": "Only reads private workspace data and does not contact external systems.",
+        "destructive_justification": "Does not delete, overwrite, or otherwise change invoices."
+      }
+    },
+    "invoice.get": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Retrieves an existing invoice and its line items without changing it.",
+        "open_world_justification": "Only reads private workspace data and does not contact external systems.",
+        "destructive_justification": "Does not delete, overwrite, or otherwise change the invoice."
+      }
+    },
+    "invoice.preview_draft": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Calculates a possible invoice from unbilled entries without creating an invoice or marking entries invoiced.",
+        "open_world_justification": "Only reads private workspace data and does not contact external systems.",
+        "destructive_justification": "Does not delete, overwrite, or otherwise change workspace data."
+      }
+    },
+    "time.propose_entries": {
+      "annotations": { "readOnlyHint": true, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Analyzes user-supplied activity and existing entries to return proposals without saving them.",
+        "open_world_justification": "Processes activity supplied to the tool and private workspace data without contacting external systems.",
+        "destructive_justification": "Does not create, delete, or change time entries."
+      }
+    },
+    "time.log_entry": {
+      "annotations": { "readOnlyHint": false, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Creates one time entry in the connected workspace after validation and duplicate checks.",
+        "open_world_justification": "Writes only to the user's private workspace and does not contact external systems.",
+        "destructive_justification": "Adds a time entry but does not delete or overwrite an existing entry."
+      }
+    },
+    "time.log_entries_batch": {
+      "annotations": { "readOnlyHint": false, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Creates validated time entries in the connected workspace and reports each result.",
+        "open_world_justification": "Writes only to the user's private workspace and does not contact external systems.",
+        "destructive_justification": "Adds time entries but does not delete or overwrite existing entries."
+      }
+    },
+    "time.update_entry": {
+      "annotations": { "readOnlyHint": false, "openWorldHint": false, "destructiveHint": true },
+      "justifications": {
+        "read_only_justification": "Updates selected fields on an existing time entry in the connected workspace.",
+        "open_world_justification": "Writes only to the user's private workspace and does not contact external systems.",
+        "destructive_justification": "Overwrites existing time-entry values, though it returns both the previous and updated entry."
+      }
+    },
+    "time.delete_entry": {
+      "annotations": { "readOnlyHint": false, "openWorldHint": false, "destructiveHint": true },
+      "justifications": {
+        "read_only_justification": "Deletes the selected time entry when the caller passes confirm: true.",
+        "open_world_justification": "Writes only to the user's private workspace and does not contact external systems.",
+        "destructive_justification": "Permanently deletes a time entry after an explicit confirmation parameter."
+      }
+    },
+    "workspace.create_client": {
+      "annotations": { "readOnlyHint": false, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Creates a client record in the connected workspace.",
+        "open_world_justification": "Writes only to the user's private workspace and does not contact external systems.",
+        "destructive_justification": "Adds a client record but does not delete or overwrite an existing record."
+      }
+    },
+    "workspace.create_project": {
+      "annotations": { "readOnlyHint": false, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Creates a project record in the connected workspace.",
+        "open_world_justification": "Writes only to the user's private workspace and does not contact external systems.",
+        "destructive_justification": "Adds a project record but does not delete or overwrite an existing record."
+      }
+    },
+    "invoice.create_draft": {
+      "annotations": { "readOnlyHint": false, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Creates a private draft invoice and associates its unbilled time entries with that draft.",
+        "open_world_justification": "Writes only to the user's private workspace and does not publish or send anything externally.",
+        "destructive_justification": "Creates a reversible draft without deleting records or contacting the client."
+      }
+    },
+    "invoice.record_payment": {
+      "annotations": { "readOnlyHint": false, "openWorldHint": false, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Marks a selected invoice as paid in the connected workspace.",
+        "open_world_justification": "Writes only to the user's private workspace and does not contact external systems.",
+        "destructive_justification": "Changes payment status but does not delete invoices or perform an irreversible external transaction."
+      }
+    },
+    "invoice.send": {
+      "annotations": { "readOnlyHint": false, "openWorldHint": true, "destructiveHint": false },
+      "justifications": {
+        "read_only_justification": "Sends an invoice email and updates the invoice's sent status.",
+        "open_world_justification": "Sends a real email to the client and may create a Stripe payment link.",
+        "destructive_justification": "Does not delete or overwrite invoices, although the sent email cannot be recalled."
+      }
+    },
+    "invoice.void": {
+      "annotations": { "readOnlyHint": false, "openWorldHint": true, "destructiveHint": true },
+      "justifications": {
+        "read_only_justification": "Changes an invoice to void status and releases its associated time entries when confirm: true.",
+        "open_world_justification": "Can change the status shown on a previously sent invoice's tokenized public page.",
+        "destructive_justification": "Voids the invoice and alters its invoicing associations after an explicit confirmation parameter."
+      }
+    }
+  },
+  "test_cases": [
+    {
+      "description": "Log a single past time entry to a known project.",
+      "user_prompt": "Log 2 hours of homepage QA for Acme on 2026-09-08.",
+      "file_attachment_urls": null,
+      "tools_triggered": "time.log_entry",
+      "expected_output": "Logs the entry or asks for project clarification if Acme is ambiguous, then confirms the parsed date and duration.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Summarize billable work by project for a bounded period.",
+      "user_prompt": "Show my billable hours by project for last week.",
+      "file_attachment_urls": null,
+      "tools_triggered": "time.report",
+      "expected_output": "Returns the requested period's hours, billable totals, unbilled value, and project breakdown.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Propose a catch-up entry from supplied activity without saving it.",
+      "user_prompt": "Reconstruct Tuesday from this activity: calendar event 'Acme design review' from 10:00 to 11:00 on 2026-09-08.",
+      "file_attachment_urls": null,
+      "tools_triggered": "time.propose_entries",
+      "expected_output": "Returns a project-matched proposal with confidence and does not create a time entry until the user confirms it.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Preview an invoice before creating it.",
+      "user_prompt": "What can I invoice Acme for through the end of August? Group the lines by project.",
+      "file_attachment_urls": null,
+      "tools_triggered": "invoice.preview_draft",
+      "expected_output": "Returns unbilled line items, hours, total, and any missing billing-email warning without creating an invoice.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Send a reviewed draft invoice only on explicit instruction.",
+      "user_prompt": "I've reviewed draft invoice INV-0007. Send it to the client now.",
+      "file_attachment_urls": null,
+      "tools_triggered": "invoice.send",
+      "expected_output": "Emails the invoice to its billing recipient, marks it sent, and reports the recipient and payment-link availability.",
+      "expected_output_url": null
+    }
+  ],
+  "negative_test_cases": [
+    {
+      "description": "Do not use Tallied for calendar scheduling.",
+      "user_prompt": "Schedule a meeting with Acme tomorrow at 10 AM.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because it cannot create calendar events or reminders.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not use Tallied to retrieve activity from an unconnected service.",
+      "user_prompt": "Look through my GitHub commits from yesterday and log them automatically.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because it can only analyze activity the user or another connected tool supplies.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not use Tallied for unrelated general information.",
+      "user_prompt": "What will the weather be in Seattle this weekend?",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because weather information is outside its time-tracking and invoicing workflows.",
+      "expected_output_url": null
+    }
+  ]
+}

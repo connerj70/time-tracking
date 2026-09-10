@@ -47,7 +47,7 @@ function loginPage(opts: { next: string; clientName?: string | null; error?: str
         <label>Email</label><input type="email" name="email" required autofocus placeholder="you@studio.com">
         <p><button class="btn block" type="submit">Email me a sign-in link</button></p>
       </form>
-      ${config.reviewer.enabled ? `<details style="margin-top:12px"><summary class="muted" style="cursor:pointer">Have a reviewer access code?</summary>
+      ${config.reviewer.enabled ? `<details open style="margin-top:12px"><summary class="muted" style="cursor:pointer">Have a reviewer access code?</summary>
       <form method="post" action="/oauth/reviewer">
         <input type="hidden" name="next" value="${esc(opts.next)}">
         <label>Access code</label><input type="password" name="code" required autocomplete="off">
