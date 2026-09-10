@@ -10,6 +10,9 @@ function env(name: string, fallback?: string): string {
 }
 
 const baseUrl = env('BASE_URL', 'http://localhost:3000').replace(/\/$/, '');
+if (process.env.NODE_ENV === 'production' && baseUrl.includes('localhost')) {
+  throw new Error('BASE_URL must be set to the public origin (e.g. https://withtallied.com) in production. OAuth discovery and redirect URIs are built from it.');
+}
 
 export const config = {
   nodeEnv: env('NODE_ENV', 'development'),
@@ -37,7 +40,7 @@ export const config = {
     /** Either works; SMTP_URL wins when both are set. */
     smtpUrl: process.env.SMTP_URL ?? '',
     resendApiKey: process.env.RESEND_API_KEY ?? '',
-    from: env('EMAIL_FROM', 'Tallied <invoices@localhost>'),
+    from: env('EMAIL_FROM', 'Tallied <invoices@chaincrafters.org>'),
     get enabled() {
       return Boolean(this.smtpUrl || this.resendApiKey);
     },
@@ -63,7 +66,7 @@ export const config = {
   /** Domain-control token for the ChatGPT plugin submission; served verbatim at /.well-known/openai-apps-challenge. */
   openaiAppsChallenge: process.env.OPENAI_APPS_CHALLENGE_TOKEN ?? '',
   productName: env('PRODUCT_NAME', 'Tallied'),
-  supportEmail: env('SUPPORT_EMAIL', 'support@localhost'),
+  supportEmail: env('SUPPORT_EMAIL', 'support@withtallied.com'),
   /** Access tokens: 1 hour. Refresh tokens: 30 days, rotated on every use. */
   accessTokenTtlSec: 60 * 60,
   refreshTokenTtlSec: 30 * 24 * 60 * 60,
