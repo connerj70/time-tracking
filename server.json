@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.withtallied/tallied",
+  "description": "Log hours and invoice clients from your AI chat. Time tracking and invoicing for freelancers.",
+  "version": "0.1.0",
+  "websiteUrl": "https://withtallied.com",
+  "repository": {
+    "url": "https://github.com/connerj70/time-tracking",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://withtallied.com/mcp"
+    }
+  ]
+}

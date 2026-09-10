@@ -58,7 +58,7 @@ for (const [route, file, title] of [
   ['/support', 'support.md', 'Support'],
   ['/', 'landing.md', 'Log hours and invoice clients from your AI chat'],
 ] as const) {
-  docsRoutes.get(route, (_req, res) => res.send(layout(title, md(doc(file)), { wide: true })));
+  docsRoutes.get(route, (_req, res) => res.send(layout(title, md(doc(file)), { width: 'prose', publicChrome: true })));
 }
 
 docsRoutes.get('/llms.txt', (_req, res) => {

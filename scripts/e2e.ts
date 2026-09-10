@@ -163,11 +163,11 @@ async function main() {
 
   const proposal = await call('time.propose_entries', {
     activity: [
-      { source: 'calendar', title: 'Acme redesign review', start: '2020-01-07T10:00:00', end: '2020-01-07T11:00:00', participants: ['pm@acme.com'] },
-      { source: 'git', title: 'feat(portal): filters', url: 'https://github.com/x/y/commit/1', start: '2020-01-07T14:00:00' },
-      { source: 'git', title: 'fix(portal): table sort', url: 'https://github.com/x/y/commit/2', start: '2020-01-07T15:00:00' },
-      { source: 'issue_tracker', title: 'Write quarterly taxes memo', start: '2020-01-07T16:00:00', duration_min: 30 },
-      { source: 'calendar', title: 'Team offsite', start: '2020-01-08T00:00:00', end: '2020-01-09T00:00:00' },
+      { source: 'calendar', title: `Acme redesign review ${RUN}`, start: '2020-01-07T10:00:00', end: '2020-01-07T11:00:00', participants: ['pm@acme.com'] },
+      { source: 'git', title: `feat(portal): filters ${RUN}`, url: `https://github.com/x/y/commit/1?r=${RUN}`, start: '2020-01-07T14:00:00' },
+      { source: 'git', title: `fix(portal): table sort ${RUN}`, url: `https://github.com/x/y/commit/2?r=${RUN}`, start: '2020-01-07T15:00:00' },
+      { source: 'issue_tracker', title: `Write quarterly taxes memo ${RUN}`, start: '2020-01-07T16:00:00', duration_min: 30 },
+      { source: 'calendar', title: `Team offsite ${RUN}`, start: '2020-01-08T00:00:00', end: '2020-01-09T00:00:00' },
     ],
   });
   assert(proposal.sc.proposed.length >= 2 && proposal.sc.unmatched.length >= 1 && proposal.sc.skipped.length >= 1, 'proposal matches, leaves unmatched, skips all-day');

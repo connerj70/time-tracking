@@ -8,7 +8,7 @@ import { sendMagicLink } from '../email/index.js';
 import { completeAuthorization, denyAuthorization, getAuthRequest } from './provider.js';
 import { clearSession, readSession, setSession } from './session.js';
 import { createWorkspaceForUser, upsertUser, type Identity } from './users.js';
-import { esc, layout } from '../http/views/layout.js';
+import { esc, layout, mark } from '../http/views/layout.js';
 
 /**
  * Identity + consent. The OAuth consent screen IS signup: no password, Google or magic link,
@@ -32,29 +32,38 @@ function nextPath(req: Request): string {
 
 function loginPage(opts: { next: string; clientName?: string | null; error?: string; sent?: string; devLink?: string }): string {
   const google = config.google.enabled
-    ? `<a class="btn block" href="/oauth/google/start?next=${encodeURIComponent(opts.next)}">Continue with Google</a><p class="center muted">or</p>`
+    ? `<a class="btn secondary block" href="/oauth/google/start?next=${encodeURIComponent(opts.next)}">Continue with Google</a><p class="sep">or</p>`
     : '';
   return layout(
     'Sign in',
-    `<div class="card">
+    `<div class="signin-mark">${mark(82)}</div>
+    <div class="card">
       <h1>${opts.clientName ? `Connect ${esc(P)} to ${esc(opts.clientName)}` : `Sign in to ${esc(P)}`}</h1>
-      <p class="muted">No password. New here? Signing in creates your free account.</p>
-      ${opts.error ? `<p class="err">${esc(opts.error)}</p>` : ''}
-      ${opts.sent ? `<p class="ok">Check ${esc(opts.sent)} for a sign-in link. It expires in 15 minutes.</p>${opts.devLink ? `<p class="muted">Dev mode, email not sent: <a href="${esc(opts.devLink)}">open the link</a></p>` : ''}` : `
-      ${google}
+      <p class="lede">No password needed. If you are new, signing in creates your free workspace.</p>
+      ${opts.error ? `<p class="notice err">${esc(opts.error)}</p>` : ''}
+      ${
+        opts.sent
+          ? `<p class="notice ok">We sent a sign-in link to ${esc(opts.sent)}. It works for 15 minutes.</p>
+             ${opts.devLink ? `<p class="hint">Development mode, so no email was sent. <a href="${esc(opts.devLink)}">Open the link</a>.</p>` : ''}`
+          : `${google}
       <form method="post" action="/oauth/magic/start">
         <input type="hidden" name="next" value="${esc(opts.next)}">
-        <label>Email</label><input type="email" name="email" required autofocus placeholder="you@studio.com">
-        <p><button class="btn block" type="submit">Email me a sign-in link</button></p>
+        <div class="field"><label for="email">Email</label><input id="email" type="email" name="email" required autofocus placeholder="you@studio.com" autocomplete="email"></div>
+        <button class="btn primary block" type="submit">Email me a sign-in link</button>
       </form>
-      ${config.reviewer.enabled ? `<details open style="margin-top:12px"><summary class="muted" style="cursor:pointer">Have a reviewer access code?</summary>
-      <form method="post" action="/oauth/reviewer">
+      ${
+        config.reviewer.enabled
+          ? `<details open class="reviewer"><summary>Reviewing ${esc(P)}? Use your access code</summary>
+      <form method="post" action="/oauth/reviewer" style="margin-top:12px">
         <input type="hidden" name="next" value="${esc(opts.next)}">
-        <label>Access code</label><input type="password" name="code" required autocomplete="off">
-        <p><button class="btn secondary block" type="submit">Sign in as reviewer</button></p>
-      </form></details>` : ''}`}
+        <div class="field"><label for="code">Access code</label><input id="code" type="password" name="code" required autocomplete="off"></div>
+        <button class="btn secondary block" type="submit">Sign in as reviewer</button>
+      </form></details>`
+          : ''
+      }`
+      }
     </div>
-    <p class="muted center">By continuing you agree to the <a href="${esc(config.baseUrl)}/terms">terms</a> and <a href="${esc(config.baseUrl)}/privacy">privacy policy</a>.</p>`,
+    <p class="legal">By continuing you agree to the <a href="${esc(config.baseUrl)}/terms">terms</a> and <a href="${esc(config.baseUrl)}/privacy">privacy policy</a>.</p>`,
   );
 }
 
@@ -67,7 +76,7 @@ authRoutes.get('/oauth/login', async (req, res) => {
   let clientName: string | null = null;
   if (reqId) {
     const ar = await getAuthRequest(reqId);
-    if (!ar) return res.status(400).send(layout('Expired', `<div class="card"><h1>This connection request expired</h1><p>Go back to Claude or ChatGPT and click Connect again.</p></div>`));
+    if (!ar) return res.status(400).send(layout('Expired', `<div class="signin-mark">${mark(82)}</div><div class="card"><h1>This connection request expired</h1><p class="lede">Go back to Claude or ChatGPT and click Connect again to start over.</p></div>`));
     clientName = ar.client_name;
   }
   res.send(loginPage({ next, clientName, error: typeof req.query.error === 'string' ? req.query.error : undefined }));
@@ -167,12 +176,13 @@ function pendingUser(req: Request): string | null {
 }
 
 function onboardingCard(tz: string): string {
-  return `<div class="card" style="background:var(--bg)">
-    <p class="muted" style="margin-top:0">Optional. You can change these any time in settings.</p>
-    <label>Business name</label><input name="business_name" placeholder="Your studio or your name">
+  return `<div style="background:var(--sunk);border-radius:var(--r-sm);padding:18px 18px 6px;margin:22px 0 0">
+    <h3 style="margin:0 0 3px">Set up your workspace</h3>
+    <p class="hint" style="margin:0 0 14px">All optional, and changeable later in settings.</p>
+    <div class="field"><label for="bn">Business name</label><input id="bn" name="business_name" placeholder="Your studio, or your own name"></div>
     <div class="row">
-      <div><label>Default hourly rate</label><input name="default_rate" type="number" min="0" step="1" placeholder="150"></div>
-      <div><label>Currency</label><select name="currency">${['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'NZD', 'CHF', 'SEK', 'NOK', 'DKK', 'JPY', 'INR', 'BRL', 'MXN', 'ZAR', 'SGD'].map((c) => `<option>${c}</option>`).join('')}</select></div>
+      <div class="field"><label for="dr">Default hourly rate</label><input id="dr" name="default_rate" type="number" min="0" step="1" placeholder="150"></div>
+      <div class="field"><label for="cu">Currency</label><select id="cu" name="currency">${['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'NZD', 'CHF', 'SEK', 'NOK', 'DKK', 'JPY', 'INR', 'BRL', 'MXN', 'ZAR', 'SGD'].map((c) => `<option>${c}</option>`).join('')}</select></div>
     </div>
     <input type="hidden" name="timezone" id="tz" value="${esc(tz)}">
     <script>try{document.getElementById('tz').value=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';var cur={en_US:'USD',en_GB:'GBP',en_CA:'CAD',en_AU:'AUD',de:'EUR',fr:'EUR',es:'EUR',it:'EUR',nl:'EUR',ja:'JPY',en_IN:'INR'}[navigator.language.replace('-','_')]||{de:'EUR',fr:'EUR',es:'EUR',it:'EUR',nl:'EUR',pt:'EUR'}[navigator.language.slice(0,2)];if(cur)document.querySelector('[name=currency]').value=cur}catch(e){}</script>
@@ -183,7 +193,7 @@ function onboardingCard(tz: string): string {
 authRoutes.get('/oauth/consent', async (req, res) => {
   const reqId = String(req.query.req ?? '');
   const ar = await getAuthRequest(reqId);
-  if (!ar) return res.status(400).send(layout('Expired', `<div class="card"><h1>This connection request expired</h1><p>Go back to Claude or ChatGPT and click Connect again.</p></div>`));
+  if (!ar) return res.status(400).send(layout('Expired', `<div class="signin-mark">${mark(82)}</div><div class="card"><h1>This connection request expired</h1><p class="lede">Go back to Claude or ChatGPT and click Connect again to start over.</p></div>`));
   const session = readSession(req);
   const pending = pendingUser(req);
   if (!session && !pending) return res.redirect(`/oauth/login?req=${reqId}`);
@@ -192,17 +202,20 @@ authRoutes.get('/oauth/consent', async (req, res) => {
   res.send(
     layout(
       'Connect',
-      `<form method="post" action="/oauth/consent" class="card">
+      `<div class="signin-mark">${mark(82)}</div>
+      <form method="post" action="/oauth/consent">
         <input type="hidden" name="req" value="${esc(reqId)}">
-        <h1>Connect ${esc(P)} to ${esc(ar.client_name ?? 'this app')}</h1>
-        <p class="muted">Signed in as ${esc(user?.email)}</p>
-        <p>${esc(ar.client_name ?? 'The app')} will be able to:</p>
-        <ul class="scopes">${ar.scopes.map((s) => `<li>${esc(SCOPE_TEXT[s] ?? s)}</li>`).join('')}</ul>
-        <p class="muted">Nothing is sent to a client without your explicit approval in the conversation.</p>
-        ${isNew ? onboardingCard('UTC') : ''}
-        <div class="row" style="margin-top:16px">
-          <button class="btn" type="submit" name="decision" value="allow">Allow</button>
-          <button class="btn secondary" type="submit" name="decision" value="deny">Cancel</button>
+        <div class="card">
+          <h1>Connect ${esc(P)} to ${esc(ar.client_name ?? 'this app')}</h1>
+          <p class="lede">Signed in as ${esc(user?.email)}.</p>
+          <h3 style="margin-top:22px">${esc(ar.client_name ?? 'This app')} will be able to</h3>
+          <ul class="scopes">${ar.scopes.map((s) => `<li>${esc(SCOPE_TEXT[s] ?? s)}</li>`).join('')}</ul>
+          <p class="hint" style="margin-top:14px">Invoices are only emailed to your clients when you say so in the conversation.</p>
+          ${isNew ? onboardingCard('UTC') : ''}
+          <div class="actions">
+            <button class="btn primary" type="submit" name="decision" value="allow">Allow</button>
+            <button class="btn secondary" type="submit" name="decision" value="deny">Cancel</button>
+          </div>
         </div>
       </form>`,
     ),
@@ -230,7 +243,7 @@ authRoutes.post('/oauth/consent', async (req, res) => {
     const url = await completeAuthorization(reqId, session.userId, session.workspaceId);
     res.redirect(url);
   } catch (e) {
-    res.status(400).send(layout('Expired', `<div class="card"><h1>${esc((e as Error).message)}</h1></div>`));
+    res.status(400).send(layout('Expired', `<div class="signin-mark">${mark(82)}</div><div class="card"><h1>Something went wrong</h1><p class="lede">${esc((e as Error).message)}</p></div>`));
   }
 });
 
@@ -238,7 +251,7 @@ authRoutes.post('/oauth/consent', async (req, res) => {
 authRoutes.get('/oauth/onboard', async (req, res) => {
   const userId = pendingUser(req);
   if (!userId) return res.redirect('/oauth/login');
-  res.send(layout('Welcome', `<form method="post" action="/oauth/onboard" class="card"><input type="hidden" name="next" value="${esc(nextPath(req))}"><h1>Welcome to ${esc(P)}</h1>${onboardingCard('UTC')}<p><button class="btn block" type="submit">Continue</button></p></form>`));
+  res.send(layout('Welcome', `<div class="signin-mark">${mark(82)}</div><form method="post" action="/oauth/onboard"><div class="card"><h1>Welcome to ${esc(P)}</h1><p class="lede">A couple of details and you are set up.</p>${onboardingCard('UTC')}<div class="actions"><button class="btn primary block" type="submit">Continue</button></div></div></form>`));
 });
 authRoutes.post('/oauth/onboard', async (req, res) => {
   const userId = pendingUser(req);
