@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from 'express';
 import express from 'express';
-import { randomBytes } from 'node:crypto';
+import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { config } from '../config.js';
 import { one, query } from '../db/index.js';
 import { randomToken, sha256 } from '../lib/ids.js';
@@ -46,7 +46,13 @@ function loginPage(opts: { next: string; clientName?: string | null; error?: str
         <input type="hidden" name="next" value="${esc(opts.next)}">
         <label>Email</label><input type="email" name="email" required autofocus placeholder="you@studio.com">
         <p><button class="btn block" type="submit">Email me a sign-in link</button></p>
-      </form>`}
+      </form>
+      ${config.reviewer.enabled ? `<details style="margin-top:12px"><summary class="muted" style="cursor:pointer">Have a reviewer access code?</summary>
+      <form method="post" action="/oauth/reviewer">
+        <input type="hidden" name="next" value="${esc(opts.next)}">
+        <label>Access code</label><input type="password" name="code" required autocomplete="off">
+        <p><button class="btn secondary block" type="submit">Sign in as reviewer</button></p>
+      </form></details>` : ''}`}
     </div>
     <p class="muted center">By continuing you agree to the <a href="${esc(config.baseUrl)}/terms">terms</a> and <a href="${esc(config.baseUrl)}/privacy">privacy policy</a>.</p>`,
   );
@@ -87,6 +93,26 @@ authRoutes.get('/oauth/magic/verify', async (req, res) => {
   );
   if (!row) return res.status(400).send(loginPage({ next: config.appUrl, error: 'That link is invalid or expired. Request a new one.' }));
   await finishIdentity(req, res, { email: row.email, provider: 'magic_link' }, row.next_path ?? config.appUrl);
+});
+
+// ---- Reviewer access code (directory reviewers; one designated account, no email round-trip) ----
+const reviewerAttempts = new Map<string, { n: number; reset: number }>();
+authRoutes.post('/oauth/reviewer', async (req, res) => {
+  const next = nextPath(req);
+  if (!config.reviewer.enabled) return res.status(404).send(loginPage({ next, error: 'Reviewer sign-in is not enabled.' }));
+  const ip = req.ip ?? 'unknown';
+  const now = Date.now();
+  const a = reviewerAttempts.get(ip) ?? { n: 0, reset: now + 60_000 };
+  if (a.reset < now) Object.assign(a, { n: 0, reset: now + 60_000 });
+  a.n += 1;
+  reviewerAttempts.set(ip, a);
+  if (a.n > 5) return res.status(429).send(loginPage({ next, error: 'Too many attempts. Wait a minute and try again.' }));
+  const given = Buffer.from(String(req.body.code ?? ''));
+  const expected = Buffer.from(config.reviewer.accessCode);
+  if (given.length !== expected.length || !timingSafeEqual(given, expected)) {
+    return res.status(401).send(loginPage({ next, error: 'That access code is not valid.' }));
+  }
+  await finishIdentity(req, res, { email: config.reviewer.email, name: 'Reviewer', provider: 'magic_link' }, next);
 });
 
 // ---- Google OIDC ----

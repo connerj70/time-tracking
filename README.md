@@ -86,6 +86,7 @@ test/            unit tests (vitest) and the golden prompt set
 | `DATABASE_URL` | no (default local docker-compose Postgres) | Postgres connection string |
 | `SESSION_SECRET` | yes in production | Signs session cookies and magic links; `openssl rand -hex 32` |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | no | Enables "Continue with Google"; omit to offer only magic links |
+| `REVIEWER_EMAIL` / `REVIEWER_ACCESS_CODE` | no | Enables an access-code sign-in for directory reviewers into one seeded account. Remove after review |
 | `SMTP_URL` | no | Any SMTP provider, e.g. `smtps://LOGIN:KEY@smtp-relay.brevo.com:465`; takes precedence over Resend |
 | `RESEND_API_KEY` | no | Alternative to SMTP_URL. With neither set, emails are printed to the log (dev only) |
 | `EMAIL_FROM` | no | From address for outbound email |

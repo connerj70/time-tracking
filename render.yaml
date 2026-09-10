@@ -24,6 +24,10 @@ services:
         sync: false          # paste the internal connection string of your existing Render Postgres
       - key: SESSION_SECRET
         generateValue: true
+      - key: REVIEWER_EMAIL
+        sync: false
+      - key: REVIEWER_ACCESS_CODE
+        sync: false
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET

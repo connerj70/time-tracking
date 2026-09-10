@@ -52,6 +52,14 @@ export const config = {
       return Boolean(this.secretKey);
     },
   },
+  /** Directory reviewers sign in with an access code instead of email. Both must be set to enable. */
+  reviewer: {
+    email: (process.env.REVIEWER_EMAIL ?? '').toLowerCase(),
+    accessCode: process.env.REVIEWER_ACCESS_CODE ?? '',
+    get enabled() {
+      return Boolean(this.email && this.accessCode.length >= 16);
+    },
+  },
   productName: env('PRODUCT_NAME', 'Tallied'),
   supportEmail: env('SUPPORT_EMAIL', 'support@localhost'),
   /** Access tokens: 1 hour. Refresh tokens: 30 days, rotated on every use. */
