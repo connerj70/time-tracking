@@ -65,6 +65,12 @@ export const config = {
   },
   /** Domain-control token for the ChatGPT plugin submission; served verbatim at /.well-known/openai-apps-challenge. */
   openaiAppsChallenge: process.env.OPENAI_APPS_CHALLENGE_TOKEN ?? '',
+  /**
+   * Ownership claim for the Glama MCP directory, served at /.well-known/glama.json.
+   * This value is public by design (the whole point is that anyone can fetch it), so it lives in
+   * source and needs no deploy-time configuration. Override via env if Glama reissues the claim.
+   */
+  glamaClaim: env('GLAMA_CLAIM_TOKEN', 'glama_claim_mZGbBoA3GvIDeSA7_FZE1ocmzpqNH90B'),
   productName: env('PRODUCT_NAME', 'Tallied'),
   supportEmail: env('SUPPORT_EMAIL', 'support@withtallied.com'),
   /** Access tokens: 1 hour. Refresh tokens: 30 days, rotated on every use. */

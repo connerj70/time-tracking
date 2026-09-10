@@ -127,6 +127,11 @@ docsRoutes.get('/.well-known/mcp', (_req, res) => {
   });
 });
 
+// Glama MCP directory ownership claim.
+docsRoutes.get('/.well-known/glama.json', (_req, res) => {
+  res.json({ $schema: 'https://glama.ai/mcp/schemas/connector.json', claim: config.glamaClaim });
+});
+
 // OpenAI plugin directory domain verification: must return ONLY the token, no JSON, no whitespace wrapper.
 docsRoutes.get('/.well-known/openai-apps-challenge', (_req, res) => {
   if (!config.openaiAppsChallenge) return res.status(404).type('text/plain').send('Not configured');
