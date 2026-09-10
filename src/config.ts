@@ -60,6 +60,8 @@ export const config = {
       return Boolean(this.email && this.accessCode.length >= 16);
     },
   },
+  /** Domain-control token for the ChatGPT plugin submission; served verbatim at /.well-known/openai-apps-challenge. */
+  openaiAppsChallenge: process.env.OPENAI_APPS_CHALLENGE_TOKEN ?? '',
   productName: env('PRODUCT_NAME', 'Tallied'),
   supportEmail: env('SUPPORT_EMAIL', 'support@localhost'),
   /** Access tokens: 1 hour. Refresh tokens: 30 days, rotated on every use. */

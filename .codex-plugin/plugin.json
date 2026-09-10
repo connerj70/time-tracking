@@ -2,20 +2,34 @@
   "name": "tallied",
   "version": "0.1.0",
   "description": "Time tracking and invoicing for freelancers and small teams, from your chat.",
-  "author": { "name": "Tallied", "email": "support@withtallied.com" },
+  "author": {
+    "name": "Tallied",
+    "email": "support@withtallied.com"
+  },
   "homepage": "https://withtallied.com",
   "license": "MIT",
-  "keywords": ["time tracking", "invoicing", "freelance", "billing", "hours", "timesheet"],
+  "keywords": [
+    "time tracking",
+    "invoicing",
+    "freelance",
+    "billing",
+    "hours",
+    "timesheet"
+  ],
   "skills": "./skills/",
   "apps": "./.app.json",
   "interface": {
     "displayName": "Tallied",
     "shortDescription": "Log hours and invoice clients from your AI chat",
-    "longDescription": "Tell it what you worked on and it logs the hours to the right client. Ask what's unbilled and it drafts the invoice.\n\nForgot to track a day or a whole week? Tallied reconstructs it from your calendar events, git commits, and tickets, matches each item to a project, and asks before logging anything uncertain.\n\nAsk how your week or month went and get hours by day, by project, or by client, billable vs. non-billable, and what's still unbilled. When it's time to get paid, Tallied drafts the invoice, shows you the lines and total before anything is created, and only sends it (with a Stripe payment link) once you say so. It can also close out a whole month across every client that owes hours, one invoice at a time, always with your approval before sending.\n\nAlready tracking time elsewhere? Import history from Toggl, Harvest, or Clockify to bring your record with you.\n\nNothing needed before connecting — a free account is created on connect.",
+    "longDescription": "Tell it what you worked on and it logs the hours to the right client. Ask what's unbilled and it drafts the invoice.\n\nForgot to track a day or a whole week? Tallied reconstructs it from your calendar events, git commits, and tickets, matches each item to a project, and asks before logging anything uncertain.\n\nAsk how your week or month went and get hours by day, by project, or by client, billable vs. non-billable, and what's still unbilled. When it's time to get paid, Tallied drafts the invoice, shows you the lines and total before anything is created, and only sends it (with a Stripe payment link) once you say so. It can also close out a whole month across every client that owes hours, one invoice at a time, always with your approval before sending.\n\nAlready tracking time elsewhere? Import history from Toggl, Harvest, or Clockify to bring your record with you.\n\nNothing needed before connecting \u2014 a free account is created on connect.",
     "developerName": "Tallied",
     "category": "Productivity",
-    "capabilities": ["Read", "Write"],
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
     "websiteURL": "https://withtallied.com",
+    "supportURL": "https://withtallied.com/support",
     "privacyPolicyURL": "https://withtallied.com/privacy",
     "termsOfServiceURL": "https://withtallied.com/terms",
     "defaultPrompt": [

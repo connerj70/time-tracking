@@ -34,5 +34,6 @@
 ## Docs
 
 - [Documentation]({{BASE_URL}}/docs)
+- [Support]({{BASE_URL}}/support)
 - [Privacy policy]({{BASE_URL}}/privacy)
 - [Terms of service]({{BASE_URL}}/terms)

@@ -24,6 +24,6 @@ Add this URL as a connector in Claude, ChatGPT, or any MCP-compatible app:
 
 Signing in creates your free workspace automatically — nothing to set up first.
 
-[Documentation]({{BASE_URL}}/docs) · [Privacy]({{BASE_URL}}/privacy) · [Terms]({{BASE_URL}}/terms)
+[Documentation]({{BASE_URL}}/docs) · [Support]({{BASE_URL}}/support) · [Privacy]({{BASE_URL}}/privacy) · [Terms]({{BASE_URL}}/terms)
 
 Free tier: unlimited time entries, 1 client, 2 invoices a month. No card required.

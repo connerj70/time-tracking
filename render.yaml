@@ -24,6 +24,8 @@ services:
         sync: false          # paste the internal connection string of your existing Render Postgres
       - key: SESSION_SECRET
         generateValue: true
+      - key: OPENAI_APPS_CHALLENGE_TOKEN
+        sync: false
       - key: REVIEWER_EMAIL
         sync: false
       - key: REVIEWER_ACCESS_CODE

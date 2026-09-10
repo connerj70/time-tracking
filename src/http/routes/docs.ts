@@ -55,6 +55,7 @@ for (const [route, file, title] of [
   ['/privacy', 'privacy.md', 'Privacy policy'],
   ['/terms', 'terms.md', 'Terms of service'],
   ['/docs', 'docs.md', 'Documentation'],
+  ['/support', 'support.md', 'Support'],
   ['/', 'landing.md', 'Log hours and invoice clients from your AI chat'],
 ] as const) {
   docsRoutes.get(route, (_req, res) => res.send(layout(title, md(doc(file)), { wide: true })));
@@ -73,7 +74,14 @@ docsRoutes.get('/.well-known/mcp', (_req, res) => {
     privacy_policy: `${config.baseUrl}/privacy`,
     terms_of_service: `${config.baseUrl}/terms`,
     support: config.supportEmail,
+    support_url: `${config.baseUrl}/support`,
   });
+});
+
+// OpenAI plugin directory domain verification: must return ONLY the token, no JSON, no whitespace wrapper.
+docsRoutes.get('/.well-known/openai-apps-challenge', (_req, res) => {
+  if (!config.openaiAppsChallenge) return res.status(404).type('text/plain').send('Not configured');
+  res.type('text/plain').send(config.openaiAppsChallenge);
 });
 
 docsRoutes.get('/healthz', (_req, res) => res.json({ ok: true }));
