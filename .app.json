@@ -3,7 +3,7 @@
   "_note": "The 'id' below is issued by ChatGPT when you register this MCP server at chatgpt.com/plugins in Developer mode. Register the server first, copy the plugin_asdk_app_... id it assigns, and replace the placeholder here before publishing.",
   "apps": [
     {
-      "id": "plugin_asdk_app_REPLACE_ME",
+      "id": "plugin_asdk_app_6aa2156f723081919c5b2fd565145126",
       "name": "Tallied",
       "mcp": {
         "url": "https://withtallied.com/mcp",
