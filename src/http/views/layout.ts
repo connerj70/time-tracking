@@ -232,6 +232,18 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;back
 .prose li{margin:5px 0}
 .prose pre{background:var(--paper);border:1px solid var(--rule);border-radius:var(--r-sm);padding:14px 16px;overflow-x:auto;font-size:13.5px}
 .prose a{text-decoration-color:var(--lime);text-decoration-thickness:2px}
+.prose ol{padding-left:20px;margin:0 0 14px}
+.prose hr{border:0;border-top:1px solid var(--rule);margin:28px 0}
+.prose h4{font-size:14.5px;font-weight:600;margin:18px 0 4px}
+/* Tables can be wider than the measure, so they scroll on their own rather than the page. */
+.tablewrap{overflow-x:auto;margin:0 0 18px;border:1px solid var(--rule);border-radius:var(--r-sm);background:var(--paper)}
+.tablewrap table{font-size:14px;min-width:100%}
+.tablewrap th{padding:10px 14px;border-bottom:1px solid var(--rule-2);white-space:nowrap;background:var(--sunk)}
+.tablewrap td{padding:10px 14px;border-bottom:1px solid var(--rule)}
+.tablewrap tr:last-child td{border-bottom:0}
+.tablewrap td:first-child{white-space:nowrap}
+.tablewrap td code{white-space:nowrap}
+.tablewrap .r{text-align:right}.tablewrap .c{text-align:center}
 
 @media (max-width:640px){
   main{padding:26px 18px 64px}
@@ -239,6 +251,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;back
   .topbar-in{padding:8px 18px 0;gap:14px;flex-wrap:wrap;min-height:0;align-items:center}
   .wordmark{order:1}
   .account{order:2}
+  .topbar-in.public .signin{order:2}
+  .topbar-in.public nav{margin-left:0}
   .topbar nav{order:3;flex:0 0 100%;gap:20px;margin-top:8px}
   .topbar nav a{padding-bottom:10px;align-items:flex-start}
   .account span{display:none}

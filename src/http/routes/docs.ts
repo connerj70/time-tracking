@@ -16,15 +16,39 @@ function doc(name: string): string {
 function md(src: string): string {
   const lines = src.replace(/\{\{PRODUCT\}\}/g, config.productName).replace(/\{\{SUPPORT_EMAIL\}\}/g, config.supportEmail).replace(/\{\{BASE_URL\}\}/g, config.baseUrl).split('\n');
   const out: string[] = [];
-  let inList = false;
+  let list: 'ul' | 'ol' | null = null;
   let inCode = false;
   const inline = (s: string) =>
     esc(s)
       .replace(/`([^`]+)`/g, '<code>$1</code>')
       .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
       .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-  for (const l of lines) {
+
+  const closeList = () => {
+    if (list) {
+      out.push(`</${list}>`);
+      list = null;
+    }
+  };
+  const openList = (kind: 'ul' | 'ol') => {
+    if (list !== kind) {
+      closeList();
+      out.push(`<${kind}>`);
+      list = kind;
+    }
+  };
+  const cells = (row: string) =>
+    row
+      .replace(/^\s*\|/, '')
+      .replace(/\|\s*$/, '')
+      .split('|')
+      .map((c) => c.trim());
+  const isDivider = (row: string) => /^\s*\|?[\s:|-]+\|[\s:|-]*$/.test(row) && row.includes('-');
+
+  for (let i = 0; i < lines.length; i++) {
+    const l = lines[i];
     if (l.startsWith('```')) {
+      closeList();
       out.push(inCode ? '</pre>' : '<pre>');
       inCode = !inCode;
       continue;
@@ -33,21 +57,46 @@ function md(src: string): string {
       out.push(esc(l));
       continue;
     }
+
+    // Tables: a header row followed by a |---|---| divider, then body rows.
+    if (/^\s*\|/.test(l) && i + 1 < lines.length && isDivider(lines[i + 1])) {
+      closeList();
+      const head = cells(l);
+      const align = cells(lines[i + 1]).map((c) => (/^:-+:$/.test(c) ? ' class="c"' : /-+:$/.test(c) ? ' class="r"' : ''));
+      const body: string[][] = [];
+      i += 2;
+      while (i < lines.length && /^\s*\|/.test(lines[i])) body.push(cells(lines[i++]));
+      i--;
+      out.push(
+        `<div class="tablewrap"><table><thead><tr>${head.map((h, n) => `<th${align[n] ?? ''}>${inline(h)}</th>`).join('')}</tr></thead><tbody>` +
+          body.map((r) => `<tr>${r.map((c, n) => `<td${align[n] ?? ''}>${inline(c)}</td>`).join('')}</tr>`).join('') +
+          `</tbody></table></div>`,
+      );
+      continue;
+    }
+
     if (/^\s*[-*] /.test(l)) {
-      if (!inList) out.push('<ul>');
-      inList = true;
+      openList('ul');
       out.push(`<li>${inline(l.replace(/^\s*[-*] /, ''))}</li>`);
       continue;
     }
-    if (inList) {
-      out.push('</ul>');
-      inList = false;
+    if (/^\s*\d+\. /.test(l)) {
+      openList('ol');
+      out.push(`<li>${inline(l.replace(/^\s*\d+\. /, ''))}</li>`);
+      continue;
     }
-    const h = l.match(/^(#{1,3}) (.*)/);
+    closeList();
+
+    if (/^\s*(---|\*\*\*|___)\s*$/.test(l)) {
+      out.push('<hr>');
+      continue;
+    }
+    const h = l.match(/^(#{1,4}) (.*)/);
     if (h) out.push(`<h${h[1].length}>${inline(h[2])}</h${h[1].length}>`);
     else if (l.trim()) out.push(`<p>${inline(l)}</p>`);
   }
-  if (inList) out.push('</ul>');
+  closeList();
+  if (inCode) out.push('</pre>');
   return out.join('\n');
 }
 
